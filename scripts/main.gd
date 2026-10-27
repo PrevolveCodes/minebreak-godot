@@ -20,8 +20,8 @@ func _ready() -> void:
 	player.name = "Player"
 	player.world = world
 	player.position = Vector3(8.0, 28.0, 8.0)
-	_apply_saved_player_state()
 	add_child(player)
+	_apply_saved_player_state()
 	_build_hud()
 	player.hud = hud
 	_make_pause_menu()
