@@ -60,8 +60,9 @@ func rebuild() -> void:
 					var tile := BlockDB.tile_for(id, face)
 					var tx := tile % 4
 					var ty := tile / 4
-					var uv0 := Vector2(float(tx) / atlas_size, float(ty) / atlas_size)
-					var uv1 := Vector2(float(tx + 1) / atlas_size, float(ty + 1) / atlas_size)
+					var inset := 0.5 / 64.0
+					var uv0 := Vector2(float(tx) / atlas_size + inset, float(ty) / atlas_size + inset)
+					var uv1 := Vector2(float(tx + 1) / atlas_size - inset, float(ty + 1) / atlas_size - inset)
 					var uv := [Vector2(uv0.x, uv1.y), uv0, Vector2(uv1.x, uv0.y), uv1]
 					var verts: Array = FACE_VERTS[face]
 					for tri in [[0, 1, 2], [0, 2, 3]]:
