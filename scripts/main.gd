@@ -8,6 +8,7 @@ var paused := false
 var world_seed := 48271
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_environment()
 	world = VoxelWorld.new()
 	world.name = "VoxelWorld"
@@ -83,6 +84,7 @@ func _make_pause_menu() -> void:
 	pause_layer.visible = false
 	var canvas := CanvasLayer.new()
 	canvas.name = "PauseUI"
+	canvas.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(canvas)
 	canvas.add_child(pause_layer)
 	var column := VBoxContainer.new()
