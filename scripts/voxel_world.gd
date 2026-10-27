@@ -7,6 +7,7 @@ var noise := FastNoiseLite.new()
 var atlas_material: StandardMaterial3D
 var seed_value := 48271
 var modified: Dictionary = {}
+var saved_player_state: Dictionary = {}
 var load_radius := 2
 
 func initialize(world_seed: int) -> void:
@@ -120,8 +121,8 @@ func _rebuild_if_loaded(key: Vector2i) -> void:
 	if chunks.has(key):
 		chunks[key].rebuild()
 
-func save_world() -> void:
-	var payload := {"seed": seed_value, "modified": []}
+func save_world(player_state: Dictionary = {}) -> void:
+	var payload := {"seed": seed_value, "modified": [], "player": player_state}
 	for p in modified.keys():
 		payload.modified.append([p.x, p.y, p.z, int(modified[p])])
 	var file := FileAccess.open("user://minebreak_world.json.tmp", FileAccess.WRITE)
@@ -145,6 +146,7 @@ func load_world() -> bool:
 	file.close()
 	if typeof(parsed) != TYPE_DICTIONARY: return false
 	seed_value = int(parsed.get("seed", seed_value))
+	saved_player_state = parsed.get("player", {})
 	noise.seed = seed_value
 	modified.clear()
 	for row in parsed.get("modified", []):
