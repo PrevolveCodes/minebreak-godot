@@ -98,7 +98,7 @@ func _physics_process(delta: float) -> void:
 	_update_target()
 	if hud:
 		var mode := "CREATIVE" if creative else "SURVIVAL"
-		hud.text = "Minebreak  |  %s  |  HP %d  |  Seed %d\nWASD move • Space jump/fly • Shift sprint • F3 toggle mode • Left mine • Right place • Esc pause\nSelected: %s × %d" % [mode, int(health), world.seed_value, BlockDB.name_of(selected_block), int(inventory.get(selected_block, 0))]
+		hud.text = "Minebreak  |  %s  |  HP %d/20  |  Hunger %d/20  |  Seed %d\nWASD move • Space jump/fly • Shift sprint • F3 toggle mode • Left mine • Right place • Esc pause\nSelected: %s × %d" % [mode, int(health), int(hunger), world.seed_value, BlockDB.name_of(selected_block), int(inventory.get(selected_block, 0))]
 
 func _update_target() -> void:
 	has_target = false
