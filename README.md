@@ -10,6 +10,7 @@ Minebreak is a from-scratch Godot 4 GDScript voxel sandbox. Open this repository
 - Nine-slot hotbar selection, basic block stacks, survival/creative toggle (F3), creative flight (F), sky/lighting, pause UI, and JSON persistence for block edits and world seed.
 - Cross-chunk block edits request neighboring mesh rebuilds.
 - Atlas tiles are generated deterministically in GDScript at startup; no third-party or Minecraft-owned art is redistributed.
+- Basic fall damage, hunger depletion, starvation damage, low-hunger regeneration, and a simple respawn are implemented. Health and hunger are shown in the HUD.
 - Player position, orientation, mode, health/hunger values, selected hotbar slot, inventory counts, world seed and edited blocks are included in the local save.
 
 ## Controls
@@ -21,7 +22,7 @@ Minebreak is a from-scratch Godot 4 GDScript voxel sandbox. Open this repository
 
 ## Known limitations (not represented as completed)
 
-This is an early playable engine foundation, not the full acceptance target yet. Biome selection, water bodies, background chunk generation, full inventory UI and stack manipulation, recipe crafting, tools/hardness, functional health/hunger damage, entities, audio, settings, world list management, multiple named world slots, and multiplayer are not implemented yet. Save/load currently uses one local save slot. Chunk meshing rebuilds the whole chunk and should be optimized before scaling the render distance. Runtime validation requires a local Godot 4 installation; this session's repository edits are made through GitHub APIs and the game has not been launched in a graphical Godot runtime here.
+This is an early playable engine foundation, not the full acceptance target yet. Biome selection, water bodies, background chunk generation, full inventory UI and stack manipulation, recipe crafting, tools/hardness, food consumption, entities, audio, settings, world list management, multiple named world slots, and multiplayer are not implemented yet. Save/load currently uses one local save slot. Chunk meshing rebuilds the whole chunk and should be optimized before scaling the render distance. Runtime validation requires a local Godot 4 installation; this session's repository edits are made through GitHub APIs and the game has not been launched in a graphical Godot runtime here.
 
 ## Smoke test
 
