@@ -18,7 +18,7 @@ func initialize(world_seed: int) -> void:
 	material.albedo_texture = TextureAtlas.create_atlas()
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.cull_mode = BaseMaterial3D.CULL_BACK
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	atlas_material = material
 
 func load_around(position: Vector3) -> void:
@@ -69,6 +69,8 @@ func _generate_chunk(key: Vector2i) -> void:
 		if floori(float(p.x) / 16.0) == key.x and floori(float(p.z) / 16.0) == key.y:
 			chunk.set_local(posmod(p.x, 16), p.y, posmod(p.z, 16), int(modified[pos]))
 	chunk.rebuild()
+	for neighbor_key in [key + Vector2i(1, 0), key + Vector2i(-1, 0), key + Vector2i(0, 1), key + Vector2i(0, -1)]:
+		_rebuild_if_loaded(neighbor_key)
 
 func get_block(wx: int, y: int, wz: int, create_if_missing := true) -> int:
 	if y < 0:
