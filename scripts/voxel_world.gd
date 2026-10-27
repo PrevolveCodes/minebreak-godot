@@ -61,9 +61,26 @@ func _generate_chunk(key: Vector2i) -> void:
 					id = BlockDB.SAND if h <= 13 else BlockDB.GRASS
 				elif y >= h - 3:
 					id = BlockDB.SAND if h <= 13 else BlockDB.DIRT
+				elif y > 3 and y < h - 3 and noise.get_noise_3d(wx * 0.085, y * 0.11, wz * 0.085) > 0.48:
+					id = BlockDB.AIR
 				elif y < 8 and abs(noise.get_noise_3d(wx * 0.12, y * 0.12, wz * 0.12)) > 0.72:
 					id = BlockDB.COAL_ORE if (wx + y + wz) % 4 == 0 else BlockDB.STONE
 				chunk.set_local(x, y, z, id)
+	for z in range(3, 13):
+		for x in range(3, 13):
+			var wx := key.x * 16 + x
+			var wz := key.y * 16 + z
+			var h := clampi(12 + int(noise.get_noise_2d(wx, wz) * 10.0) + int(noise.get_noise_2d(wx * 2.7, wz * 2.7) * 3.0), 3, 38)
+			var roll := posmod(abs(wx * 73856093 + wz * 19349663 + seed_value * 83492791), 113)
+			if roll != 0 or h <= 15 or chunk.get_local(x, h, z) != BlockDB.GRASS:
+				continue
+			for ty in range(h + 1, mini(h + 5, VoxelChunk.HEIGHT)):
+				chunk.set_local(x, ty, z, BlockDB.WOOD)
+			for ly in range(h + 3, mini(h + 6, VoxelChunk.HEIGHT)):
+				for lz in range(max(0, z - 2), mini(16, z + 3)):
+					for lx in range(max(0, x - 2), mini(16, x + 3)):
+						if abs(lx - x) + abs(lz - z) + abs(ly - (h + 4)) <= 4 and chunk.get_local(lx, ly, lz) == BlockDB.AIR:
+							chunk.set_local(lx, ly, lz, BlockDB.LEAVES)
 	for pos in modified.keys():
 		var p: Vector3i = pos
 		if floori(float(p.x) / 16.0) == key.x and floori(float(p.z) / 16.0) == key.y:
