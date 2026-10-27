@@ -121,5 +121,6 @@ func _setup_controls() -> void:
 		if not InputMap.has_action(action_name):
 			InputMap.add_action(action_name)
 		var event := InputEventKey.new()
+		event.keycode = defaults[action_name]
 		event.physical_keycode = defaults[action_name]
 		InputMap.action_add_event(action_name, event)
