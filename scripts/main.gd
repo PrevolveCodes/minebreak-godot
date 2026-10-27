@@ -20,6 +20,7 @@ func _ready() -> void:
 	player.name = "Player"
 	player.world = world
 	player.position = Vector3(8.0, 28.0, 8.0)
+	_apply_saved_player_state()
 	add_child(player)
 	_build_hud()
 	player.hud = hud
@@ -106,13 +107,13 @@ func _make_pause_menu() -> void:
 	var save := Button.new()
 	save.text = "Save World"
 	save.custom_minimum_size.y = 44
-	save.pressed.connect(func(): world.save_world())
+	save.pressed.connect(func(): _save_game())
 	column.add_child(save)
 	var quit := Button.new()
 	quit.text = "Save and Quit"
 	quit.custom_minimum_size.y = 44
 	quit.pressed.connect(func():
-		world.save_world()
+		_save_game()
 		get_tree().quit()
 	)
 	column.add_child(quit)
@@ -132,4 +133,41 @@ func _resume() -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		if world: world.save_world()
+		if world: _save_game()
+
+func _apply_saved_player_state() -> void:
+	var state := world.saved_player_state
+	if state.is_empty():
+		return
+	var pos = state.get("position", [])
+	if pos is Array and pos.size() == 3:
+		player.position = Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
+	player.rotation.y = float(state.get("yaw", 0.0))
+	player.camera.rotation.x = float(state.get("pitch", 0.0))
+	player.creative = bool(state.get("creative", false))
+	player.fly = bool(state.get("fly", player.creative))
+	player.health = float(state.get("health", 20.0))
+	player.hunger = float(state.get("hunger", 20.0))
+	player.selected_slot = clampi(int(state.get("selected_slot", 0)), 0, 8)
+	player.selected_block = player.hotbar[player.selected_slot]
+	var inv = state.get("inventory", {})
+	if inv is Dictionary:
+		player.inventory.clear()
+		for key in inv.keys():
+			player.inventory[int(key)] = int(inv[key])
+
+func _save_game() -> void:
+	if world == null:
+		return
+	var state := {
+		"position": [player.position.x, player.position.y, player.position.z],
+		"yaw": player.rotation.y,
+		"pitch": player.camera.rotation.x,
+		"creative": player.creative,
+		"fly": player.fly,
+		"health": player.health,
+		"hunger": player.hunger,
+		"selected_slot": player.selected_slot,
+		"inventory": player.inventory
+	}
+	world.save_world(state)
