@@ -87,6 +87,7 @@ func _generate_terrain() -> void:
 	var material := StandardMaterial3D.new()
 	material.vertex_color_use_as_albedo = true
 	material.roughness = 1.0
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	terrain_mesh.surface_set_material(0, material)
 
 	var terrain_body := StaticBody3D.new()
