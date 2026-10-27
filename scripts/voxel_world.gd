@@ -132,8 +132,8 @@ func save_world(player_state: Dictionary = {}) -> void:
 	file.store_string(JSON.stringify(payload))
 	file.close()
 	if FileAccess.file_exists("user://minebreak_world.json"):
-		DirAccess.remove_absolute("user://minebreak_world.json")
-	var err := DirAccess.rename_absolute("user://minebreak_world.json.tmp", "user://minebreak_world.json")
+		DirAccess.remove_absolute(ProjectSettings.globalize_path("user://minebreak_world.json"))
+	var err := DirAccess.rename_absolute(ProjectSettings.globalize_path("user://minebreak_world.json.tmp"), ProjectSettings.globalize_path("user://minebreak_world.json"))
 	if err != OK:
 		push_error("World save rename failed: %s" % error_string(err))
 
