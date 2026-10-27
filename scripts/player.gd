@@ -20,6 +20,10 @@ var has_target := false
 var hud: Label
 var mode_label: Label
 var break_timer := 0.0
+var hunger_clock := 0.0
+var starvation_clock := 0.0
+var regeneration_clock := 0.0
+var fall_start_y := 0.0
 
 func _ready() -> void:
 	var shape := CollisionShape3D.new()
@@ -69,6 +73,11 @@ func _physics_process(delta: float) -> void:
 	direction.y = 0
 	direction = direction.normalized()
 	var current_speed := speed * (1.6 if Input.is_key_pressed(KEY_SHIFT) else 1.0)
+	var grounded_before := is_on_floor()
+	if grounded_before:
+		fall_start_y = global_position.y
+	elif fall_start_y <= 0.0:
+		fall_start_y = global_position.y
 	if creative and fly:
 		velocity = direction * current_speed
 		if Input.is_key_pressed(KEY_SPACE): velocity.y = current_speed
@@ -79,6 +88,12 @@ func _physics_process(delta: float) -> void:
 		if not is_on_floor(): velocity.y -= 20.0 * delta
 		if Input.is_key_pressed(KEY_SPACE) and is_on_floor(): velocity.y = jump_velocity
 	move_and_slide()
+	if not creative and not grounded_before and is_on_floor():
+		var fall_distance := fall_start_y - global_position.y
+		if fall_distance > 3.0:
+			health = maxf(0.0, health - floorf(fall_distance - 3.0))
+		fall_start_y = global_position.y
+	_update_survival(delta)
 	world.load_around(global_position)
 	_update_target()
 	if hud:
@@ -118,3 +133,36 @@ func _place() -> void:
 	if world.get_block(place_block.x, place_block.y, place_block.z) != BlockDB.AIR: return
 	world.set_block(place_block.x, place_block.y, place_block.z, selected_block)
 	if not creative: inventory[selected_block] = int(inventory.get(selected_block, 0)) - 1
+
+func _update_survival(delta: float) -> void:
+	if creative:
+		health = 20.0
+		hunger = 20.0
+		hunger_clock = 0.0
+		starvation_clock = 0.0
+		regeneration_clock = 0.0
+		return
+	hunger_clock += delta
+	if hunger_clock >= 30.0:
+		hunger_clock -= 30.0
+		hunger = maxf(0.0, hunger - 1.0)
+	if hunger <= 0.0:
+		starvation_clock += delta
+		if starvation_clock >= 5.0:
+			starvation_clock -= 5.0
+			health = maxf(0.0, health - 1.0)
+	else:
+		starvation_clock = 0.0
+	if hunger >= 18.0 and health > 0.0 and health < 20.0:
+		regeneration_clock += delta
+		if regeneration_clock >= 4.0:
+			regeneration_clock -= 4.0
+			health = minf(20.0, health + 1.0)
+	else:
+		regeneration_clock = 0.0
+	if health <= 0.0:
+		global_position = Vector3(8.0, 30.0, 8.0)
+		velocity = Vector3.ZERO
+		health = 20.0
+		hunger = 20.0
+		fall_start_y = 0.0
