@@ -6,10 +6,10 @@ const BLOCK_SIZE := 1.0
 const PLAYER_SCRIPT = preload("res://scripts/player.gd")
 
 func _ready() -> void:
+	_setup_controls()
 	_setup_environment()
 	_generate_terrain()
 	_spawn_player()
-	_setup_controls()
 
 func _setup_environment() -> void:
 	var sun := DirectionalLight3D.new()
@@ -60,8 +60,8 @@ func _generate_terrain() -> void:
 		[Vector3(-0.5,-0.5,0.5), Vector3(-0.5,0.5,0.5), Vector3(-0.5,0.5,-0.5), Vector3(-0.5,-0.5,-0.5)],
 		[Vector3(-0.5,0.5,0.5), Vector3(0.5,0.5,0.5), Vector3(0.5,0.5,-0.5), Vector3(-0.5,0.5,-0.5)],
 		[Vector3(-0.5,-0.5,-0.5), Vector3(0.5,-0.5,-0.5), Vector3(0.5,-0.5,0.5), Vector3(-0.5,-0.5,0.5)],
-		[Vector3(0.5,-0.5,0.5), Vector3(0.5,0.5,0.5), Vector3(-0.5,0.5,0.5), Vector3(-0.5,-0.5,0.5)],
-		[Vector3(-0.5,-0.5,-0.5), Vector3(-0.5,0.5,-0.5), Vector3(0.5,0.5,-0.5), Vector3(0.5,-0.5,-0.5)]
+		[Vector3(-0.5,-0.5,0.5), Vector3(-0.5,0.5,0.5), Vector3(0.5,0.5,0.5), Vector3(0.5,-0.5,0.5)],
+		[Vector3(0.5,-0.5,-0.5), Vector3(0.5,0.5,-0.5), Vector3(-0.5,0.5,-0.5), Vector3(-0.5,-0.5,-0.5)]
 	]
 	var face_colors := [
 		Color(0.48,0.38,0.23), Color(0.48,0.38,0.23),
